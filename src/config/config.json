@@ -1,0 +1,7 @@
+{
+  "serverUrl": {
+    "development": "http://localhost:4000",
+    "production": "https://consultorio-virtual-api.herokuapp.com"
+  },
+  "localStorageKey": "CONSULTORIO_AUTH"
+}
