@@ -3,14 +3,13 @@ import { formActionTypesForScope } from 'src/helpers/actions/form';
 const defaultFormSetupSucceeded = (state, data) => {
   return {
     ...state,
-    item : {...data},
-    loading: false
+    item : {...data}
   };
 }
 
-const formReducerForScope = (scope, defaultFormState, validationsSpec, formSetupSucceeded = defaultFormSetupSucceeded) => {
+const formReducerForScope = (scope, defaultFormState, formSetupSucceeded = defaultFormSetupSucceeded) => {
   defaultFormState = {
-    validations: {},
+    //validations: {},
     ...defaultFormState
   };
   const actionTypes = formActionTypesForScope(scope);
@@ -22,33 +21,33 @@ const formReducerForScope = (scope, defaultFormState, validationsSpec, formSetup
         return {
           ...state,
           item,
-          validations: {}
+          //validations: {}
         };
       case actionTypes.FORM_SUBMIT_FAILED:
         return {
-          ...state,
-          loading: false
+          ...state
         };
       case actionTypes.FORM_SUBMIT_SUCCEEDED:
         return {
-          ...state,
-          loading: false
+          ...state
         };
       case actionTypes.FORM_CANCEL:
         return {
           ...defaultFormState
         };
+      case actionTypes.FORM_SUBMIT:
+        return {
+          ...state
+        };
       case actionTypes.FORM_SETUP:
         return {
-          ...state,
-          loading: true
+          ...state
         };
       case actionTypes.FORM_SETUP_SUCCEEDED:
         return formSetupSucceeded(state,action.data);
       case actionTypes.FORM_SETUP_FAILED:
         return {
-          ...state,
-          loading: false
+          ...state
         };
       default:
         return state;

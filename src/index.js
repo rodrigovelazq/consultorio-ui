@@ -8,9 +8,13 @@ import { combineReducers } from 'redux';
 import usuarios from 'src/components/usuarios/reducer';
 import message from 'src/components/message/reducer';
 import loading from 'src/components/loading/reducer';
+import login from 'src/components/login/reducer';
 
 const rootReducer = combineReducers({
-usuarios,message,loading
+  login,
+  usuarios,
+  message,
+  loading
 })
 
 

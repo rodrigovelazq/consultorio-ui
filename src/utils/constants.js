@@ -1,4 +1,5 @@
 export const scopes = {
+  LOGIN: 'LOGIN',
   USUARIOS: 'USUARIOS'
 };
 

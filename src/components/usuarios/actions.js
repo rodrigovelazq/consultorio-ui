@@ -22,7 +22,7 @@ export function loadUsuarios(){
       dispatch(actions.dataRequestSucceeded(usuarios.data));
       dispatch(actions.loadingClose());
     }).catch(error => {
-      dispatch(actions.dataRequestFailed(error.response.data));
+      dispatch(actions.dataRequestFailed());
       dispatch(actions.messageShow(error.response.data));
       dispatch(actions.loadingClose());
     });
@@ -37,7 +37,7 @@ export function getUsuario(idUsuario){
       dispatch(actions.formSetupSucceeded(usuarios.data));
       dispatch(actions.loadingClose());
     }).catch(error => {
-      dispatch(actions.formSetupFailed(error.response.data));
+      dispatch(actions.formSetupFailed());
       dispatch(actions.messageShow(error.response.data));
       dispatch(actions.loadingClose());
     });
@@ -53,7 +53,7 @@ export function addUsuario(newUsuario){
       dispatch(actions.messageShow('El usuario fue agregado correctamente'));
       dispatch(actions.loadingClose());
   }).catch(error => {
-      dispatch(actions.formSubmitFailed(error.response.data));
+      dispatch(actions.formSubmitFailed());
       dispatch(actions.messageShow(error.response.data));
       dispatch(actions.loadingClose());
   });
@@ -69,7 +69,7 @@ export function updateUsuario(oldUsuario){
       dispatch(actions.messageShow('El usuario fue actualizado correctamente'));
       dispatch(actions.loadingClose());
   }).catch(error => {
-      dispatch(actions.formSubmitFailed(error.response.data));
+      dispatch(actions.formSubmitFailed());
       dispatch(actions.messageShow(error.response.data));
       dispatch(actions.loadingClose());
   });
@@ -78,15 +78,15 @@ export function updateUsuario(oldUsuario){
 
 export function deleteUsuario(oldUsuario){
   return(dispatch)=>{
-    console.log(JSON.stringify(oldUsuario));
     dispatch(actions.deleteRequested(oldUsuario));
     dispatch(actions.loadingShow());
     return axios.delete('/usuarios/'+oldUsuario.id).then((response) =>{
       dispatch(actions.deleteSucceded(response.data));
       dispatch(actions.messageShow('El usuario fue eliminado correctamente'));
       dispatch(actions.loadingClose());
+      dispatch(loadUsuarios());
   }).catch(error => {
-      dispatch(actions.deleteFailed(error.response.data));
+      dispatch(actions.deleteFailed());
       dispatch(actions.messageShow(error.response.data));
       dispatch(actions.loadingClose());
   });

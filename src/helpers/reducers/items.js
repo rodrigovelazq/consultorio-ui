@@ -5,11 +5,11 @@ import { itemsActionTypesForScope } from 'src/helpers/actions/items';
  */
 const defaultItemsState = {
   data: [],
-  loading: true,
+  /*loading: true,
   error: null,
   showError: false,
   open: false,
-  itemSelected: null
+  itemSelected: null*/
 }
 
 
@@ -21,27 +21,27 @@ const itemsReducerForScope = (scope) => {
         return {
           ...state,
           data: [],
-          loading: true,
-          error: null,
-          showError: false,
-          open:false
+          //loading: true,
+          //error: null,
+          //showError: false,
+          //open:false
         };
       case actionTypes.DATA_REQUEST_SUCCEEDED:
         return {
           ...state,
-          loading: false,
+          //loading: false,
           data: action.data
         };
       case actionTypes.DATA_REQUEST_FAILED:
         return {
           ...state,
-          loading: false,
+          //loading: false,
           data: [],
-          error: action.error,
-          showError: true,
-          open:false
+          //error: action.error,
+          //showError: true,
+          //open:false
         }
-      case actionTypes.DATA_CLEAN_ERROR:
+      /*case actionTypes.DATA_CLEAN_ERROR:
         return {
           ...state,
           showError: false,
@@ -70,7 +70,7 @@ const itemsReducerForScope = (scope) => {
             showError: false,
             error: null,
             open: false
-          }
+          }*/
       default:
         return state;
     }

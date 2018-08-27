@@ -1,10 +1,10 @@
 import { deleteActionTypesForScope } from 'src/helpers/actions/delete';
 
 const defaultDeleteState = {
-  open: false,
+  //open: false,
   item: null,
-  loading: false,
-  error: null
+  //loading: false,
+  //error: null
 };
 
 const deleteReducerForScope = scope => {
@@ -15,9 +15,9 @@ const deleteReducerForScope = scope => {
         return {
           ...state,
           item: action.item,
-          open: true
+          //open: true
         };
-      case actionTypes.DELETE_DO_DELETE:
+      /*case actionTypes.DELETE_DO_DELETE:
         return {
           ...state,
           loading: true
@@ -25,7 +25,7 @@ const deleteReducerForScope = scope => {
       case actionTypes.DELETE_CANCEL:
         return {
           ...defaultDeleteState
-        };
+        };*/
       case actionTypes.DELETE_SUCCEDED:
         return {
           ...defaultDeleteState
@@ -33,8 +33,8 @@ const deleteReducerForScope = scope => {
       case actionTypes.DELETE_FAILED:
         return {
           ...state,
-          loading: false,
-          error: action.error
+          //loading: false,
+          //error: action.error
         };
       default:
         return state;

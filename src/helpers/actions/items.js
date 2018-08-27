@@ -2,10 +2,10 @@ export const actionTypes = {
   DATA_REQUESTED: 'DATA_REQUESTED',
   DATA_REQUEST_SUCCEEDED: 'DATA_REQUEST_SUCCEEDED',
   DATA_REQUEST_FAILED: 'DATA_REQUEST_FAILED',
-  DATA_CLEAN_ERROR: 'DATA_CLEAN_ERROR',
-  DATA_SELECTED: 'DATA_SELECTED',
-  DATA_CANCEL: 'DATA_CANCEL',
-  DATA_CLOSE: 'DATA_CLOSE'
+  //DATA_CLEAN_ERROR: 'DATA_CLEAN_ERROR',
+  //DATA_SELECTED: 'DATA_SELECTED',
+  //DATA_CANCEL: 'DATA_CANCEL',
+  //DATA_CLOSE: 'DATA_CLOSE'
 };
 
 /**
@@ -17,10 +17,10 @@ export const itemsActionTypesForScope = scope => ({
   DATA_REQUESTED: `${scope}_${actionTypes.DATA_REQUESTED}`,
   DATA_REQUEST_SUCCEEDED: `${scope}_${actionTypes.DATA_REQUEST_SUCCEEDED}`,
   DATA_REQUEST_FAILED: `${scope}_${actionTypes.DATA_REQUEST_FAILED}`,
-  DATA_CLEAN_ERROR: `${scope}_${actionTypes.DATA_CLEAN_ERROR}`,
-  DATA_SELECTED: `${scope}_${actionTypes.DATA_SELECTED}`,
-  DATA_CANCEL: `${scope}_${actionTypes.DATA_CANCEL}`,
-  DATA_CLOSE: `${scope}_${actionTypes.DATA_CLOSE}`,
+  //DATA_CLEAN_ERROR: `${scope}_${actionTypes.DATA_CLEAN_ERROR}`,
+  //DATA_SELECTED: `${scope}_${actionTypes.DATA_SELECTED}`,
+  //DATA_CANCEL: `${scope}_${actionTypes.DATA_CANCEL}`,
+  //DATA_CLOSE: `${scope}_${actionTypes.DATA_CLOSE}`,
 });
 
 /**
@@ -39,10 +39,9 @@ export const itemsActionsForScope = scope => {
       data
     }),
     dataRequestFailed: error => ({
-      type: actionTypes.DATA_REQUEST_FAILED,
-      error
+      type: actionTypes.DATA_REQUEST_FAILED
     }),
-    dataCleanError: _ => ({
+    /*dataCleanError: _ => ({
       type: actionTypes.DATA_CLEAN_ERROR
     }),
     dataSelected: data => ({
@@ -54,7 +53,7 @@ export const itemsActionsForScope = scope => {
     }),
     dataClosed: _ => ({
       type: actionTypes.DATA_CLOSE
-    })
+    })*/
   };
 };
 
@@ -69,14 +68,14 @@ export const itemsDispatchesForScope = (scope, dispatch) => {
     dataRequested: _ => dispatch(actionCreators.dataRequested()),
     dataRequestSucceeded: data =>
       dispatch(actionCreators.dataRequestSucceeded(data)),
-    dataRequestFailed: error =>
-      dispatch(actionCreators.dataRequestFailed(error)),
-    dataCleanError: _ => dispatch(actionCreators.dataCleanError()),
+    dataRequestFailed: () =>
+      dispatch(actionCreators.dataRequestFailed()),
+    /*dataCleanError: _ => dispatch(actionCreators.dataCleanError()),
     dataSelected: data =>
       dispatch(actionCreators.dataSelected(data)),
     dataCanceled: _ =>
       dispatch(actionCreators.dataCanceled()),
     dataClosed: _ =>
-      dispatch(actionCreators.dataClosed())
+      dispatch(actionCreators.dataClosed())*/
   };
 };
