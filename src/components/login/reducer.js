@@ -1,15 +1,20 @@
 import { actionTypes } from './actions';
-import { scopes } from 'src/utils/constants';
-import { combineReducers } from 'redux';
-import formReducerForScope from 'src/helpers/reducers/form';
 
 const login = () => {
-  return (state = {item: {username: '', password: ''}}, action) => {
+  return (state = {item: {username: '', password: ''}, isLoggedIn : false}, action) => {
       switch (action.type) {
+        case actionTypes.LOGIN_INPUT_CHANGED:
+          const item = { ...state.item };
+          item[action.field] = action.value;
+          return {
+            ...state,
+            item
+          };
         case actionTypes.LOGIN_SUCEEDED:
           return {
             ...state,
-            item: action.item
+            item: action.item,
+            isLoggedIn: true
           };
       case actionTypes.LOGIN_FAILED:
           return {
@@ -23,7 +28,8 @@ const login = () => {
       case actionTypes.LOGOUT_SUCEEDED:
           return {
             ...state,
-            item: {username: '', password: ''}
+            item: {username: '', password: ''},
+            isLoggedIn: false
           };
       case actionTypes.LOGOUT_FAILED:
           return {
@@ -35,14 +41,4 @@ const login = () => {
     };
 }
 
-const formInitialState = {
-    item:{
-      username: '',
-      password: ''
-  }
-}
-
-  export default combineReducers({
-    form: formReducerForScope(scopes.LOGIN,formInitialState),
-    login: login()
-  })
+  export default login()

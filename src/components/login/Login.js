@@ -55,18 +55,22 @@ class Login extends React.Component {
     this.setState(state => ({ showPassword: !state.showPassword }));
   };
 
+  submit(event) {
+    event.preventDefault();
+    this.props.login(this.props.item)
+  }
+
   render() {
     const { classes } = this.props;
-    console.log(JSON.stringify(this.props));
     return (
       <div className={classes.root}>
         <form className={classes.container} noValidate autoComplete="off" 
-         alignItems="center" justify="center">
-           <Paper className={classes.paper} >
-               <Typography variant="title" gutterBottom>
+         style={{padding: "10%"}} onSubmit={this.submit.bind(this)}>
+            <Paper className={classes.paper}>
+               <Typography variant="title" gutterBottom style={{textAlign:'center', width:'100%'}}>
                  {'Login'}
                </Typography>
-               <Grid container spacing={24}>
+               <Grid container spacing={24} style={{textAlign:'center'}}>
                  <Grid item md={12} xs={12}>
                    <TextField
                      label="Username"
@@ -101,23 +105,27 @@ class Login extends React.Component {
                     variant="contained"
                      className={classes.button}
                     color="primary"
-                    onClick={_ => {this.props.login(this.props.item);}}>Login</Button>
+                    type="submit">Login</Button>
                 </Grid>
                </Grid>
             </Paper>
-             </form>
-         </div>
+        </form>
+      </div>
   )};
 }
 
 
 const mapStateToProps = state  => ({
-    item: state.login.form.item
+    item: state.login.item
 })
 
 const mapDispatchToProps = dispatch => ({
     login: (item) => dispatch(loginActions.login(item)),
-    ...formDispatchesForScope(scopes.LOGIN, dispatch),
+    formInputChanged: (field, value) => dispatch({
+      type: 'LOGIN_INPUT_CHANGED',
+      field,
+      value
+    }),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login));

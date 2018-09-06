@@ -8,21 +8,29 @@ import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { listLinkComponents } from './listLinkComponents';
 import Message from 'src/components/message/Message';
 import RouterPath from './RouterPath';
 import { BrowserRouter } from 'react-router-dom'
 import Loading from 'src/components/loading/Loading';
+import { connect } from 'react-redux';
+import * as loginActions from 'src/components/login/actions';
 
 const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  flexPush: {
+    flexGrow: 10,
   },
   appFrame: {
     height: '100%',
@@ -103,6 +111,17 @@ class MenuDrawer extends React.Component {
   state = {
     open: false,
     anchor: 'left',
+    anchorEl: null
+  };
+
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.props.logout();
+    this.setState({ anchorEl: null });
+    
   };
 
   handleDrawerOpen = () => {
@@ -121,7 +140,8 @@ class MenuDrawer extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-    const { anchor, open } = this.state;
+    const { anchor, open, anchorEl } = this.state;
+    const openProfile = Boolean(anchorEl);
 
     const drawer = (
       <Drawer
@@ -170,8 +190,7 @@ class MenuDrawer extends React.Component {
             className={classNames(classes.appBar, {
               [classes.appBarShift]: open,
               [classes[`appBarShift-${anchor}`]]: open,
-            })}
-          >
+            })}>
             <Toolbar disableGutters={!open}>
               <IconButton
                 color="inherit"
@@ -181,11 +200,35 @@ class MenuDrawer extends React.Component {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="title" color="inherit" noWrap>
+              <Typography variant="title" color="inherit" noWrap className={classes.flexPush}>
                 Consultorio Virtual v0.1
               </Typography>
+              <IconButton
+                aria-owns={openProfile ? 'menu-appbar' : null}
+                aria-haspopup="true"
+                onClick={this.handleMenu}
+                color="inherit"
+              >
+                <AccountCircleIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={openProfile}
+                onClose={this.handleClose}
+              >
+                <MenuItem onClick={this.handleClose}>Log Out</MenuItem>
+              </Menu>
             </Toolbar>
-                        <Loading/>
+            <Loading/>
           </AppBar>
           {before}
           <main
@@ -211,4 +254,11 @@ MenuDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(MenuDrawer);
+const mapStateToProps = state  => ({
+})
+
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(loginActions.logout())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles, { withTheme: true })(MenuDrawer));

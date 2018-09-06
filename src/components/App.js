@@ -2,20 +2,21 @@ import React from 'react';
 import MenuDrawer from 'src/components/utils/MenuDrawer';
 import Login from 'src/components/login/Login';
 import { connect } from 'react-redux';
+import { Route } from 'react-router-dom'
 
 class App extends React.Component {
   
   render() {
     return (
       <div>
-        {this.props.item.id ? <MenuDrawer/> : <Login/>}
+        {this.props.isLoggedIn ? <MenuDrawer /> : <Route path="/" component={Login} />}
       </div>
     )
   }
 }
 
 const mapStateToProps = state  => ({
-  item: state.login.form.item
+  isLoggedIn: state.login.isLoggedIn
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -1,10 +1,11 @@
-import axios from 'src/utils/axios';
+import {instance as axios} from 'src/utils/axios';
 import { itemsActionsForScope } from 'src/helpers/actions/items';
 import { formActionsForScope } from 'src/helpers/actions/form';
 import { scopes } from 'src/utils/constants';
 import { deleteActionForScope} from 'src/helpers/actions/delete';
 import { messageActions } from 'src/components/message/actions';
 import { loadingActions } from 'src/components/loading/actions';
+import request from 'request';
 
 const actions = {
   ...itemsActionsForScope(scopes.USUARIOS),
@@ -16,6 +17,20 @@ const actions = {
 
 export function loadUsuarios(){
   return(dispatch)=>{
+    /*
+      const user = JSON.parse(localStorage.getItem('user'));
+      var options = { method: 'GET',
+      url: 'http://localhost:4000/usuarios',
+      headers: { 
+        Authorization: 'Bearer ' +user.token
+      }};
+      
+      request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+      
+        console.log(body);
+      });
+    */
     dispatch(actions.dataRequested());
     dispatch(actions.loadingShow());
     axios.get("/usuarios").then((usuarios)=>{
@@ -23,7 +38,7 @@ export function loadUsuarios(){
       dispatch(actions.loadingClose());
     }).catch(error => {
       dispatch(actions.dataRequestFailed());
-      dispatch(actions.messageShow(error.response.data));
+      dispatch(actions.messageShow("Ocurrio un error"));
       dispatch(actions.loadingClose());
     });
   }
