@@ -1,96 +1,105 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+import DataTable from "../library/data-table/DataTable";
+import axios from "axios";
+
+const getPacientesPaginate = (page, size, order, orderBy, filter) => {
+    return axios.get('http://localhost:5000/api/pacientes', {
+        params: {
+            page,
+            size,
+            order,
+            orderBy,
+            filter
+        }
+    });
+}
+
+const dateFormat = (date) => {
+    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+}
 
 export default function Pacientes() {
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [count, setCount] = React.useState(0);
+    const [order, setOrder] = React.useState('asc');
+    const [orderBy, setOrderBy] = React.useState('id');
+    const [filter, setFilter] = React.useState('');
+    const [rows, setRows] = React.useState([]);
+
+    const rowSettings = [
+        {key: 'nombre', label: 'Nombre'},
+        {key: 'apellido', label: 'Apellido'},
+        {key: 'telefono', label: 'Telefono'},
+        {key: 'cedula', label: 'Cedula'},
+        {key: 'fecha_nacimiento', label: 'Fecha de Nacimiento', rowDisplay: (row) => dateFormat(new Date(row.fecha_nacimiento))},
+        {
+            key: 'actions',
+            label: 'Acciones',
+            onDelete: (item) => console.log(`Item ${item.nombre} eliminado`),
+            onEdit: (item) => console.log(`Item ${item.nombre} editado`)
+        },
+    ];
+
+    React.useEffect(() => {
+        getPacientesPaginate(page, rowsPerPage, order, orderBy, filter).then(function (response) {
+            setRows(response.data.rows);
+            setCount(response.data.count);
+        })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+    }, []);
+
+
+    const handlePageChange = (newPage) => {
+        setPage(newPage);
+        getPacientesPaginate(newPage, rowsPerPage, order, orderBy, filter).then(function (response) {
+            setRows(response.data.rows);
+            setCount(response.data.count);
+        })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+    }
+
+    const handleOrderChange = (newOrder, newOrderBy) => {
+        setOrder(newOrder);
+        setOrderBy(newOrderBy);
+        getPacientesPaginate(page, rowsPerPage, newOrder, newOrderBy, filter).then(function (response) {
+            setRows(response.data.rows);
+            setCount(response.data.count);
+        })
+            .catch(function (error) {
+                console.log(error);
+            })
+            .then(function () {
+                // always executed
+            });
+    }
+
     return (
         <React.Fragment>
-            <Typography variant="h6" gutterBottom>
-                Shipping address
-            </Typography>
-            <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="firstName"
-                        name="firstName"
-                        label="First name"
-                        fullWidth
-                        autoComplete="given-name"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="lastName"
-                        name="lastName"
-                        label="Last name"
-                        fullWidth
-                        autoComplete="family-name"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        required
-                        id="address1"
-                        name="address1"
-                        label="Address line 1"
-                        fullWidth
-                        autoComplete="shipping address-line1"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        id="address2"
-                        name="address2"
-                        label="Address line 2"
-                        fullWidth
-                        autoComplete="shipping address-line2"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="city"
-                        name="city"
-                        label="City"
-                        fullWidth
-                        autoComplete="shipping address-level2"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField id="state" name="state" label="State/Province/Region" fullWidth />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="zip"
-                        name="zip"
-                        label="Zip / Postal code"
-                        fullWidth
-                        autoComplete="shipping postal-code"
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        required
-                        id="country"
-                        name="country"
-                        label="Country"
-                        fullWidth
-                        autoComplete="shipping country"
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <FormControlLabel
-                        control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-                        label="Use this address for payment details"
-                    />
-                </Grid>
-            </Grid>
+            <DataTable
+                rows={rows}
+                rowSettings={rowSettings}
+                page={page}
+                onPageChange={handlePageChange}
+                rowsPerPage={rowsPerPage}
+                setRowsPerPage={setRowsPerPage}
+                order={order}
+                orderBy={orderBy}
+                onOrderChange={handleOrderChange}
+                filter={filter}
+                setFilter={setFilter}
+                count={count}
+            />
         </React.Fragment>
     );
 }
