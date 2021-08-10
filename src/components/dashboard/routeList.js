@@ -5,7 +5,8 @@ import PacientesForm from "../pacientes/PacientesForm";
 
 export const routerList = (
     <Switch>
-        <Route path={`/pacientes`} component={Pacientes}/>
-        <Route path={`/pacientesForm`} component={PacientesForm}/>
+        <Route exact path={`/pacientes`} component={Pacientes}/>
+        <Route exact path={`/pacientesForm`} component={PacientesForm}/>
+        <Route exact path={`/pacientesForm/:id`} component={PacientesForm}/>
     </Switch>
 )

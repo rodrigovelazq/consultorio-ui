@@ -1,22 +1,8 @@
 import React from 'react';
 import DataTable from "../library/data-table/DataTable";
-import axios from "axios";
-
-const getPacientesPaginate = (page, size, order, orderBy, filter) => {
-    return axios.get('http://localhost:5000/api/pacientes', {
-        params: {
-            page,
-            size,
-            order,
-            orderBy,
-            filter
-        }
-    });
-}
-
-const dateFormat = (date) => {
-    return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
-}
+import {dateFormat} from "../../utils/date-utils";
+import {deletePaciente, getPacientesPaginate} from "./services";
+import {useHistory} from 'react-router-dom';
 
 export default function Pacientes() {
     const [page, setPage] = React.useState(0);
@@ -26,18 +12,33 @@ export default function Pacientes() {
     const [orderBy, setOrderBy] = React.useState('id');
     const [filter, setFilter] = React.useState('');
     const [rows, setRows] = React.useState([]);
+    const history = useHistory();
 
     const rowSettings = [
         {key: 'nombre', label: 'Nombre'},
         {key: 'apellido', label: 'Apellido'},
-        {key: 'telefono', label: 'Telefono'},
-        {key: 'cedula', label: 'Cedula'},
-        {key: 'fecha_nacimiento', label: 'Fecha de Nacimiento', rowDisplay: (row) => dateFormat(new Date(row.fecha_nacimiento))},
+        {key: 'telefono', label: 'Teléfono'},
+        {key: 'cedula', label: 'Cédula'},
+        {
+            key: 'fecha_nacimiento',
+            label: 'Fecha de Nacimiento',
+            rowDisplay: (row) => dateFormat(new Date(row.fecha_nacimiento))
+        },
         {
             key: 'actions',
             label: 'Acciones',
-            onDelete: (item) => console.log(`Item ${item.nombre} eliminado`),
-            onEdit: (item) => console.log(`Item ${item.nombre} editado`)
+            onDelete: (item) => deletePaciente(item.id).then(function (response) {
+                getPacientesPaginate(page, rowsPerPage, order, orderBy, filter).then(function (response) {
+                    setRows(response.data.rows);
+                    setCount(response.data.count);
+                })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }).catch(function (error) {
+                    console.log(error);
+                }),
+            onEdit: (item) => history.push(`/pacientesForm/${item.id}`)
         },
     ];
 
@@ -48,9 +49,6 @@ export default function Pacientes() {
         })
             .catch(function (error) {
                 console.log(error);
-            })
-            .then(function () {
-                // always executed
             });
     }, []);
 
@@ -63,9 +61,6 @@ export default function Pacientes() {
         })
             .catch(function (error) {
                 console.log(error);
-            })
-            .then(function () {
-                // always executed
             });
     }
 
@@ -78,11 +73,20 @@ export default function Pacientes() {
         })
             .catch(function (error) {
                 console.log(error);
-            })
-            .then(function () {
-                // always executed
             });
     }
+
+    const handleChangeFilter = (newFilter) => {
+        setFilter(newFilter);
+        getPacientesPaginate(page, rowsPerPage, order, orderBy, newFilter).then(function (response) {
+            setRows(response.data.rows);
+            setCount(response.data.count);
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
 
     return (
         <React.Fragment>
@@ -97,8 +101,10 @@ export default function Pacientes() {
                 orderBy={orderBy}
                 onOrderChange={handleOrderChange}
                 filter={filter}
-                setFilter={setFilter}
+                onChangeFilter={handleChangeFilter}
                 count={count}
+                urlForm={`/pacientesForm`}
+                tableTitle={'Pacientes'}
             />
         </React.Fragment>
     );
